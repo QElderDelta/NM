@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cassert>
+#include <cmath>
 #include <iostream>
+#include <numeric>
+#include <tuple>
 #include <vector>
 
 struct TMatrixSize {
@@ -24,9 +27,27 @@ public:
 
     TMatrix operator+(const TMatrix& other) const;
     TMatrix operator*(const TMatrix& other) const;
-private:
-    void InitializeMatrix();
 
-    TMatrixSize size_;
+    std::tuple<TMatrix, TMatrix, TMatrix> LUDecomposition() const;
+
+    TMatrix InverseMatrix() const;
+
+    double Determinant() const;
+
+    void Clear();
+
+    void SetIdentity();
+
+    double& GetElement(size_t i, size_t j);
+
+    const double& GetElement(size_t i, size_t j) const;
+
+    void SetElement(size_t i, size_t j, double value);
+private:
+    void SwapRows(size_t i, size_t j);
+
+    void SwapCols(size_t i, size_t j);
+
+    TMatrixSize size_{};
     std::vector<std::vector<double>> matrix_;
 };
