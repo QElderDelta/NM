@@ -133,11 +133,13 @@ std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
 }
 
 TMatrix TMatrix::InverseMatrix() const {
-    return TMatrix();
+    auto [l, u, p] = this->LUDecomposition();
+    return InverseMatrixUsingLU(l, u, p);
 }
 
 double TMatrix::Determinant() const {
-    return 0;
+    auto [l, u, p] = this->LUDecomposition();
+    return GetDeterminantUsingLU(l, u, p);
 }
 
 void TMatrix::SwapRows(size_t i, size_t j) {
@@ -175,4 +177,26 @@ void TMatrix::SetElement(size_t i, size_t j, double value) {
         throw std::out_of_range("");
     }
     matrix_[i][j] = value;
+}
+
+const TMatrixSize &TMatrix::GetSize() const {
+    return size_;
+}
+
+std::vector<double> TMatrix::GetColumn(size_t j) const {
+    if(j >= size_.number_of_cols) {
+        throw std::out_of_range("");
+    }
+    std::vector<double> res(size_.number_of_rows);
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        res[i] = matrix_[i][j];
+    }
+    return res;
+}
+
+const std::vector<double> &TMatrix::GetRow(size_t i) const {
+    if(i >= size_.number_of_rows) {
+        throw std::out_of_range("");
+    }
+    return matrix_[i];
 }

@@ -7,6 +7,8 @@
 #include <tuple>
 #include <vector>
 
+#include "matrixops.h"
+
 struct TMatrixSize {
     size_t number_of_rows, number_of_cols;
 
@@ -28,25 +30,31 @@ public:
     TMatrix operator+(const TMatrix& other) const;
     TMatrix operator*(const TMatrix& other) const;
 
-    std::tuple<TMatrix, TMatrix, TMatrix> LUDecomposition() const;
-
-    TMatrix InverseMatrix() const;
+    void Clear();
 
     double Determinant() const;
 
-    void Clear();
+    std::vector<double> GetColumn(size_t j) const;
 
-    void SetIdentity();
+    const std::vector<double>& GetRow(size_t i) const;
 
     double& GetElement(size_t i, size_t j);
 
     const double& GetElement(size_t i, size_t j) const;
 
-    void SetElement(size_t i, size_t j, double value);
-private:
-    void SwapRows(size_t i, size_t j);
+    const TMatrixSize& GetSize() const;
 
+    TMatrix InverseMatrix() const;
+
+    std::tuple<TMatrix, TMatrix, TMatrix> LUDecomposition() const;
+
+    void SetElement(size_t i, size_t j, double value);
+
+    void SetIdentity();
+private:
     void SwapCols(size_t i, size_t j);
+
+    void SwapRows(size_t i, size_t j);
 
     TMatrixSize size_{};
     std::vector<std::vector<double>> matrix_;
