@@ -102,8 +102,6 @@ std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
     TMatrix m(size_);
     TMatrix p(size_);
     std::vector<std::pair<size_t, size_t>> swaps;
-    std::vector<size_t> rows_pos(size_.number_of_rows);
-    std::iota(rows_pos.begin(), rows_pos.end(), 0);
     for(size_t k = 0; k < size_.number_of_cols - 1; ++k) {
         double max_element = std::abs(u.matrix_[k][k]);
         size_t max_element_row = k;
@@ -115,7 +113,6 @@ std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
         }
         if(max_element_row != k) {
             std::swap(u.matrix_[k], u.matrix_[max_element_row]);
-            std::swap(rows_pos[k], rows_pos[max_element_row]);
             l.SwapRows(k, max_element_row);
             l.SwapCols(k, max_element_row);
             swaps.emplace_back(k, max_element_row);
