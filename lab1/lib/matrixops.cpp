@@ -90,3 +90,22 @@ bool FindParityOfPermutation(TMatrix p) {
     }
     return permutation_count % 2;
 }
+
+TMatrix SweepMethod(const TTridiagonalMatrix &a, const TMatrix &b) {
+    size_t n = b.GetSize().number_of_rows;
+    std::vector<std::vector<double>> coefs(n - 1);
+    TMatrix x(n, 1);
+    coefs[0].push_back(-a.GetElement(0, 1) / a.GetElement(0, 0));
+    coefs[0].push_back(b.GetElement(0, 0) / a.GetElement(0, 0));
+    for(size_t i = 1; i < n - 1; ++i) {
+        coefs[i].push_back(-a.GetElement(i, 2) / (a.GetElement(i, 1) + a.GetElement(i, 0) * coefs[i - 1][0]));
+        coefs[i].push_back((b.GetElement(i, 0) - a.GetElement(i, 0) * coefs[i - 1][1]) /
+                            (a.GetElement(i, 1) + a.GetElement(i, 0) * coefs[i - 1][0]));
+    }
+    x.SetElement(n - 1, 0, (b.GetElement(n - 1, 0) - a.GetElement(n - 1, 0) * coefs[n - 1 - 1][1]) /
+                           (a.GetElement(n - 1, 1) + a.GetElement(n - 1, 0) * coefs[n - 1 - 1][0]));
+    for(int i = n - 2; i >= 0; --i) {
+        x.SetElement(i, 0, coefs[i][0] * x.GetElement(i + 1, 0) + coefs[i][1]);
+    }
+    return x;
+}

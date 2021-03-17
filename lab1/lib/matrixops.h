@@ -1,6 +1,7 @@
 #pragma once
 
 #include "matrix.h"
+#include "tridiagonal_matrix.h"
 
 class TMatrix;
 
@@ -15,3 +16,5 @@ double GetDeterminantUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& 
 TMatrix InverseMatrixUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p);
 
 TMatrix SolveLinearSystemUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p, const TMatrix& b);
+
+TMatrix SweepMethod(const TTridiagonalMatrix& a, const TMatrix& b);
