@@ -32,6 +32,7 @@ std::istream &operator>>(std::istream &is, TMatrix &m) {
 }
 
 std::ostream &operator<<(std::ostream &os, const TMatrix &m) {
+    os << std::setprecision(5) << std::fixed;
     for(size_t i = 0; i < m.size_.number_of_rows; ++i) {
         for(size_t j = 0; j < m.size_.number_of_cols; ++j) {
             os << m.matrix_[i][j];
@@ -120,7 +121,11 @@ std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
         for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
             m.matrix_[i][k] = -u.matrix_[i][k] / u.matrix_[k][k];
         }
-        u = m * u;
+        for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
+            for(size_t j = k; j < size_.number_of_cols; ++j) {
+                u.matrix_[i][j] = u.matrix_[i][j] + m.matrix_[i][k] * u.matrix_[k][j];
+            }
+        }
         for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
             l.matrix_[i][k] = m.matrix_[i][k] * (-1);
         }

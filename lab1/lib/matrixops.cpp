@@ -41,7 +41,6 @@ double GetDeterminantUsingLU(const TMatrix &l, const TMatrix &u, const TMatrix &
     result *= product;
     if(parity_is_odd) {
         result *= -1;
-
     }
     return result;
 }
