@@ -30,12 +30,12 @@ double GetDeterminantUsingLU(const TMatrix &l, const TMatrix &u, const TMatrix &
     bool parity_is_odd = FindParityOfPermutation(p);
     double result = 1;
     double product = 1;
-    for(int i = 0; i < l.GetSize().number_of_rows; ++i) {
+    for(size_t i = 0; i < l.GetSize().number_of_rows; ++i) {
         product *= l.GetElement(i, i);
     }
     result *= product;
     product = 1;
-    for(int i = 0; i < l.GetSize().number_of_rows; ++i) {
+    for(size_t i = 0; i < l.GetSize().number_of_rows; ++i) {
         product *= u.GetElement(i, i);
     }
     result *= product;
@@ -52,13 +52,13 @@ TMatrix InverseMatrixUsingLU(const TMatrix &l, const TMatrix &u, const TMatrix &
     e = p * e;
     for(size_t j = 0; j < l.GetSize().number_of_cols; ++j) {
         x = ForwardSubstitution(l, e, j);
-        for(int i = 0; i < l.GetSize().number_of_rows; ++i) {
+        for(size_t i = 0; i < l.GetSize().number_of_rows; ++i) {
             z.SetElement(i, j, x.GetElement(i, 0));
         }
     }
     for(size_t j = 0; j < l.GetSize().number_of_cols; ++j) {
         x = BackwardSubstitution(u, z, j);
-        for(int i = 0; i < l.GetSize().number_of_rows; ++i) {
+        for(size_t i = 0; i < l.GetSize().number_of_rows; ++i) {
             e.SetElement(i, j, x.GetElement(i, 0));
         }
     }
@@ -77,11 +77,11 @@ TMatrix SolveLinearSystemUsingLU(const TMatrix &l, const TMatrix &u, const TMatr
 
 bool FindParityOfPermutation(TMatrix p) {
     size_t permutation_count = 0;
-    for(int i = 0; i < p.GetSize().number_of_rows; ++i) {
+    for(size_t i = 0; i < p.GetSize().number_of_rows; ++i) {
         if(p.GetElement(i, i) != 1) {
             ++permutation_count;
             p.SetElement(i, i, 1);
-            for(int j = i + 1; j < p.GetSize().number_of_rows; ++j) {
+            for(size_t j = i + 1; j < p.GetSize().number_of_rows; ++j) {
                 if(p.GetElement(j, i) == 1) {
                     p.SetElement(j, i, 0);
                 }
@@ -124,16 +124,70 @@ TMatrix SimpleIterationsMethod(const TMatrix &m, const TMatrix &b, double eps, s
         beta.SetElement(i, 0, b.GetElement(i, 0) / m.GetElement(i, i));
     }
     TMatrix x = beta;
-    TMatrix x_prev = beta;
+    TMatrix x_prev;
     size_t iter_count = 0;
-    double eps_k = 1;
+    double eps_k;
     log_stream << "Matrix alpha l1 norm: " << alpha.Getl1Norm() << '\n';
+    bool use_alpha_norm = alpha.Getl1Norm() < 1;
     while(!iter_count || eps_k > eps) {
         ++iter_count;
         x_prev = x;
         x = beta + alpha * x_prev;
-        eps_k = alpha.Getl1Norm() / (1 - alpha.Getl1Norm()) * (x - x_prev).Getl1Norm();
+        if(use_alpha_norm) {
+            eps_k = alpha.Getl1Norm() / (1 - alpha.Getl1Norm()) * (x - x_prev).Getl1Norm();
+        } else {
+            eps_k = (x - x_prev).Getl1Norm();
+        }
     }
     log_stream << "Simple iterations method took " << iter_count << " iterations" << '\n';
+    return x;
+}
+
+TMatrix SeidelMethod(const TMatrix &m, const TMatrix &b, double eps, std::ostream &log_stream) {
+    TMatrix alpha(m.GetSize());
+    TMatrix beta = b;
+    for(size_t i = 0; i < m.GetSize().number_of_rows; ++i) {
+        for(size_t j = 0; j < m.GetSize().number_of_cols; ++j) {
+            if(i == j) {
+                alpha.SetElement(i, j, 0);
+            } else {
+                alpha.SetElement(i, j, -m.GetElement(i, j) / m.GetElement(i, i));
+            }
+        }
+        beta.SetElement(i, 0, b.GetElement(i, 0) / m.GetElement(i, i));
+    }
+    TMatrix c(m.GetSize());
+    TMatrix d(m.GetSize());
+    c.Clear();
+    d.Clear();
+    for(size_t i = 0; i < m.GetSize().number_of_rows; ++i) {
+        for(size_t j = 0; j < m.GetSize().number_of_cols; ++j) {
+            if(j >= i) {
+                d.SetElement(i, j, alpha.GetElement(i, j));
+            } else {
+                c.SetElement(i, j, alpha.GetElement(i, j));
+            }
+        }
+    }
+    auto inverse = (TMatrix(m.GetSize()) - c).InverseMatrix();
+    alpha = inverse * d;
+    beta = inverse * beta;
+    TMatrix x = beta;
+    TMatrix x_prev;
+    size_t iter_count = 0;
+    double eps_k;
+    log_stream << "Matrix alpha l1 norm: " << alpha.Getl1Norm() << '\n';
+    bool use_alpha_norm = alpha.Getl1Norm() < 1;
+    while(!iter_count || eps_k > eps) {
+        ++iter_count;
+        x_prev = x;
+        x = beta + alpha * x_prev;
+        if(use_alpha_norm) {
+            eps_k = alpha.Getl1Norm() / (1 - alpha.Getl1Norm()) * (x - x_prev).Getl1Norm();
+        } else {
+            eps_k = (x - x_prev).Getl1Norm();
+        }
+    }
+    log_stream << "Seidel's method took " << iter_count << " iterations" << '\n';
     return x;
 }
