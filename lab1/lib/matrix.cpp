@@ -49,12 +49,25 @@ std::ostream &operator<<(std::ostream &os, const TMatrix &m) {
 
 TMatrix TMatrix::operator+(const TMatrix &other) const {
     if(this->size_ != other.size_) {
-        throw std::invalid_argument("Matrices don't have same sizes");
+        throw std::invalid_argument("Matrices don't have the same sizes");
     }
     TMatrix result(this->size_);
     for(size_t i = 0; i < size_.number_of_rows; ++i) {
         for(size_t j = 0; j < size_.number_of_cols; ++j) {
             result.matrix_[i][j] = this->matrix_[i][j] + other.matrix_[i][j];
+        }
+    }
+    return result;
+}
+
+TMatrix TMatrix::operator-(const TMatrix &other) const {
+    if(this->size_ != other.size_) {
+        throw std::invalid_argument("Matrices don't have the same sizes");
+    }
+    TMatrix result(this->size_);
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        for(size_t j = 0; j < size_.number_of_cols; ++j) {
+            result.matrix_[i][j] = this->matrix_[i][j] - other.matrix_[i][j];
         }
     }
     return result;
@@ -199,4 +212,44 @@ const std::vector<double> &TMatrix::GetRow(size_t i) const {
         throw std::out_of_range("");
     }
     return matrix_[i];
+}
+
+double TMatrix::Getl1Norm() const {
+    double sum;
+    double norm = 0;
+    for(size_t j = 0; j < size_.number_of_cols; ++j) {
+        sum = 0;
+        for(size_t i = 0; i < size_.number_of_rows; ++i) {
+            sum += std::abs(matrix_[i][j]);
+        }
+        if(sum > norm) {
+            norm = sum;
+        }
+    }
+    return norm;
+}
+
+double TMatrix::Getl2Norm() const {
+    double sum = 0;
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        for(size_t j = 0; j < size_.number_of_cols; ++j) {
+            sum += std::abs(matrix_[i][j]);
+        }
+    }
+    return std::sqrt(sum);
+}
+
+double TMatrix::GetlinfNorm() const {
+    double sum;
+    double norm = 0;
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        sum = 0;
+        for(size_t j = 0; j < size_.number_of_cols; ++j) {
+            sum += std::abs(matrix_[i][j]);
+        }
+        if(sum > norm) {
+            norm = sum;
+        }
+    }
+    return norm;
 }

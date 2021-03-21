@@ -29,6 +29,7 @@ public:
     friend std::ostream& operator<<(std::ostream& is, const TMatrix& m);
 
     TMatrix operator+(const TMatrix& other) const;
+    TMatrix operator-(const TMatrix& other) const;
     TMatrix operator*(const TMatrix& other) const;
 
     void Clear();
@@ -44,6 +45,12 @@ public:
     const double& GetElement(size_t i, size_t j) const;
 
     const TMatrixSize& GetSize() const;
+
+    double Getl1Norm() const;
+
+    double Getl2Norm() const;
+
+    double GetlinfNorm() const;
 
     TMatrix InverseMatrix() const;
 

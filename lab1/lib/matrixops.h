@@ -15,6 +15,8 @@ double GetDeterminantUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& 
 
 TMatrix InverseMatrixUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p);
 
+TMatrix SimpleIterationsMethod(const TMatrix& m, const TMatrix& b, double eps, std::ostream& log_stream = std::cout);
+
 TMatrix SolveLinearSystemUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p, const TMatrix& b);
 
 TMatrix SweepMethod(const TTridiagonalMatrix& a, const TMatrix& b);

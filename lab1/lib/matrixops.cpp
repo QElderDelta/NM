@@ -109,3 +109,31 @@ TMatrix SweepMethod(const TTridiagonalMatrix &a, const TMatrix &b) {
     }
     return x;
 }
+
+TMatrix SimpleIterationsMethod(const TMatrix &m, const TMatrix &b, double eps, std::ostream& log_stream) {
+    TMatrix alpha(m.GetSize());
+    TMatrix beta = b;
+    for(size_t i = 0; i < m.GetSize().number_of_rows; ++i) {
+        for(size_t j = 0; j < m.GetSize().number_of_cols; ++j) {
+            if(i == j) {
+                alpha.SetElement(i, j, 0);
+            } else {
+                alpha.SetElement(i, j, -m.GetElement(i, j) / m.GetElement(i, i));
+            }
+        }
+        beta.SetElement(i, 0, b.GetElement(i, 0) / m.GetElement(i, i));
+    }
+    TMatrix x = beta;
+    TMatrix x_prev = beta;
+    size_t iter_count = 0;
+    double eps_k = 1;
+    log_stream << "Matrix alpha l1 norm: " << alpha.Getl1Norm() << '\n';
+    while(!iter_count || eps_k > eps) {
+        ++iter_count;
+        x_prev = x;
+        x = beta + alpha * x_prev;
+        eps_k = alpha.Getl1Norm() / (1 - alpha.Getl1Norm()) * (x - x_prev).Getl1Norm();
+    }
+    log_stream << "Simple iterations method took " << iter_count << " iterations" << '\n';
+    return x;
+}

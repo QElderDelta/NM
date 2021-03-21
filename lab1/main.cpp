@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
+
 #include "lib/matrix.h"
+#include "lib/sparse_matrix.h"
 #include "lib/tridiagonal_matrix.h"
 
 void Task1_1() {
@@ -28,8 +30,21 @@ void Task1_2() {
     os << '\n' << SweepMethod(a, b) << '\n';
 }
 
+void Task1_3_1() {
+    TMatrix a, b;
+    double eps;
+    std::ifstream is("../task1_3.txt");
+    std::ofstream os("../task1_3_1_result.txt");
+    is >> a >> b >> eps;
+    os << SimpleIterationsMethod(a, b, eps, os) << '\n';
+    os << "Exact solution:" << '\n';
+    auto [l, u, p] = a.LUDecomposition();
+    os << SolveLinearSystemUsingLU(l, u, p, b) << '\n';
+}
+
 int main() {
     Task1_1();
     Task1_2();
+    Task1_3_1();
     return 0;
 }
