@@ -100,7 +100,6 @@ void TMatrix::SetIdentity() {
 std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
     TMatrix l(size_);
     TMatrix u(*this);
-    TMatrix m(size_);
     TMatrix p(size_);
     std::vector<std::pair<size_t, size_t>> swaps;
     for(size_t k = 0; k < size_.number_of_cols - 1; ++k) {
@@ -119,17 +118,13 @@ std::tuple<TMatrix, TMatrix, TMatrix> TMatrix::LUDecomposition() const {
             swaps.emplace_back(k, max_element_row);
         }
         for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
-            m.matrix_[i][k] = -u.matrix_[i][k] / u.matrix_[k][k];
+            l.matrix_[i][k] = u.matrix_[i][k] / u.matrix_[k][k];
         }
         for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
             for(size_t j = k; j < size_.number_of_cols; ++j) {
-                u.matrix_[i][j] = u.matrix_[i][j] + m.matrix_[i][k] * u.matrix_[k][j];
+                u.matrix_[i][j] = u.matrix_[i][j] - l.matrix_[i][k] * u.matrix_[k][j];
             }
         }
-        for(size_t i = k + 1; i < size_.number_of_rows; ++i) {
-            l.matrix_[i][k] = m.matrix_[i][k] * (-1);
-        }
-        m.SetIdentity();
     }
     for(auto it = swaps.rbegin(); it != swaps.rend(); ++it) {
         p.SwapRows(it->first, it->second);
