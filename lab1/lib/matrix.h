@@ -31,6 +31,7 @@ public:
     TMatrix operator+(const TMatrix& other) const;
     TMatrix operator-(const TMatrix& other) const;
     TMatrix operator*(const TMatrix& other) const;
+    TMatrix operator*(double value) const;
 
     void Clear();
 
@@ -59,6 +60,8 @@ public:
     void SetElement(size_t i, size_t j, double value);
 
     void SetIdentity();
+
+    void Transpose();
 private:
     void SwapCols(size_t i, size_t j);
 

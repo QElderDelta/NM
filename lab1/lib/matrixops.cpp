@@ -191,3 +191,55 @@ TMatrix SeidelMethod(const TMatrix &m, const TMatrix &b, double eps, std::ostrea
     log_stream << "Seidel's method took " << iter_count << " iterations" << '\n';
     return x;
 }
+
+std::pair<TMatrix, TMatrix> JacobiRotationMethod(const TMatrix &a, double eps, std::ostream& log_stream) {
+    size_t iter_count = 0;
+    TMatrix u(a.GetSize());
+    TMatrix u_k(a.GetSize());
+    TMatrix a_k = a;
+    double phi_k;
+    size_t n = a.GetSize().number_of_rows;
+    size_t m = a.GetSize().number_of_cols;
+    std::pair<size_t, size_t> max_element_pos;
+    double max_element;
+    while(std::sqrt(GetSumOfSquaredNonDiagonalElements(a_k)) > eps) {
+        max_element = -1;
+        max_element_pos = std::make_pair(0, 0);
+        for(size_t i = 0; i < n; ++i) {
+            for(size_t j = 0; j < m; ++j) {
+                if(i != j && std::abs(a_k.GetElement(i, j)) > max_element) {
+                    max_element = std::abs(a_k.GetElement(i, j));
+                    max_element_pos = std::make_pair(i, j);
+                }
+            }
+        }
+        phi_k = 0.5 * std::atan(2 * a_k.GetElement(max_element_pos.first, max_element_pos.second) / (
+                    a_k.GetElement(max_element_pos.first, max_element_pos.first)
+                        - a_k.GetElement(max_element_pos.second, max_element_pos.second)
+                ));
+        u_k.SetElement(max_element_pos.first, max_element_pos.first, cos(phi_k));
+        u_k.SetElement(max_element_pos.second, max_element_pos.second, cos(phi_k));
+        u_k.SetElement(max_element_pos.first, max_element_pos.second, sin(phi_k));
+        u_k.SetElement(max_element_pos.second, max_element_pos.first, -sin(phi_k));
+        a_k = u_k * a_k;
+        u_k.Transpose();
+        a_k = a_k * u_k;
+        u = u * u_k;
+        u_k.SetIdentity();
+        ++iter_count;
+    }
+    log_stream << "Jacobi's rotation method took " << iter_count << " iterations" << '\n';
+    return std::make_pair(a_k, u);
+}
+
+double GetSumOfSquaredNonDiagonalElements(const TMatrix &a) {
+    double res = 0;
+    for(size_t i = 0; i < a.GetSize().number_of_rows; ++i) {
+        for(size_t j = 0; j < a.GetSize().number_of_cols; ++j) {
+            if(i != j) {
+                res += a.GetElement(i, j) * a.GetElement(i, j);
+            }
+        }
+    }
+    return res;
+}

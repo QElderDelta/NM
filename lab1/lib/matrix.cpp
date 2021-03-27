@@ -253,3 +253,22 @@ double TMatrix::GetlinfNorm() const {
     }
     return norm;
 }
+
+void TMatrix::Transpose() {
+    assert(size_.number_of_rows == size_.number_of_cols);
+    for(size_t i = 0; i < size_.number_of_rows - 1; ++i) {
+        for(size_t j = i + 1; j < size_.number_of_rows; ++j) {
+            std::swap(matrix_[i][j], matrix_[j][i]);
+        }
+    }
+}
+
+TMatrix TMatrix::operator*(double value) const {
+    TMatrix res(size_);
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        for(size_t j = 0; j < size_.number_of_cols; ++j) {
+            res.matrix_[i][j] = matrix_[i][j] * value;
+        }
+    }
+    return res;
+}

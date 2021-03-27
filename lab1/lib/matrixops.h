@@ -13,7 +13,11 @@ TMatrix ForwardSubstitution(const TMatrix& a, const TMatrix& b, size_t column_nu
 
 double GetDeterminantUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p);
 
+double GetSumOfSquaredNonDiagonalElements(const TMatrix& a);
+
 TMatrix InverseMatrixUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p);
+
+std::pair<TMatrix, TMatrix> JacobiRotationMethod(const TMatrix& a, double eps, std::ostream& log_stream = std::cout);
 
 TMatrix SeidelMethod(const TMatrix& m, const TMatrix& b, double eps, std::ostream& log_stream = std::cout);
 
