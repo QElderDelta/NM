@@ -272,3 +272,34 @@ TMatrix TMatrix::operator*(double value) const {
     }
     return res;
 }
+
+std::pair<TMatrix, TMatrix> TMatrix::QRDecomposition() const {
+    TMatrix q(size_);
+    TMatrix r = *this;
+    TMatrix v(size_.number_of_rows, 1);
+    TMatrix v_transposed(1, size_.number_of_rows);
+    TMatrix e(size_);
+    TMatrix h;
+    double sum;
+    for(size_t i = 0; i < size_.number_of_rows; ++i) {
+        v.Clear();
+        v_transposed.Clear();
+        sum = 0;
+        v.matrix_[i][0] = this->matrix_[i][i];
+        for(size_t j = i + 1; j < size_.number_of_rows; ++j) {
+            sum += this->matrix_[j][i] * this->matrix_[j][i];
+            v.matrix_[j][0] = this->matrix_[j][i];
+        }
+        if(this->matrix_[i][i] < 0) {
+            sum *= -1;
+        }
+        v.matrix_[i][0] += sum;
+        for(size_t j = 0; j < size_.number_of_rows; ++j) {
+            v_transposed.matrix_[0][j] = v.matrix_[j][0];
+        }
+        h = e - (v * v_transposed) * (2 / (v_transposed * v).matrix_[0][0]);
+        q = q * h;
+        r = h * r;
+    }
+    return {q, r};
+}

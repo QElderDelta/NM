@@ -199,17 +199,15 @@ std::pair<TMatrix, TMatrix> JacobiRotationMethod(const TMatrix &a, double eps, s
     TMatrix a_k = a;
     double phi_k;
     size_t n = a.GetSize().number_of_rows;
-    size_t m = a.GetSize().number_of_cols;
     std::pair<size_t, size_t> max_element_pos;
     double max_element;
     while(std::sqrt(GetSumOfSquaredNonDiagonalElements(a_k)) > eps) {
         max_element = -1;
-        max_element_pos = std::make_pair(0, 0);
         for(size_t i = 0; i < n; ++i) {
-            for(size_t j = 0; j < m; ++j) {
+            for(size_t j = i + 1; j < n; ++j) {
                 if(i != j && std::abs(a_k.GetElement(i, j)) > max_element) {
                     max_element = std::abs(a_k.GetElement(i, j));
-                    max_element_pos = std::make_pair(i, j);
+                    max_element_pos = {i, j};
                 }
             }
         }
@@ -217,10 +215,10 @@ std::pair<TMatrix, TMatrix> JacobiRotationMethod(const TMatrix &a, double eps, s
                     a_k.GetElement(max_element_pos.first, max_element_pos.first)
                         - a_k.GetElement(max_element_pos.second, max_element_pos.second)
                 ));
-        u_k.SetElement(max_element_pos.first, max_element_pos.first, cos(phi_k));
-        u_k.SetElement(max_element_pos.second, max_element_pos.second, cos(phi_k));
-        u_k.SetElement(max_element_pos.first, max_element_pos.second, sin(phi_k));
-        u_k.SetElement(max_element_pos.second, max_element_pos.first, -sin(phi_k));
+        u_k.SetElement(max_element_pos.first, max_element_pos.first, std::cos(phi_k));
+        u_k.SetElement(max_element_pos.second, max_element_pos.second, std::cos(phi_k));
+        u_k.SetElement(max_element_pos.first, max_element_pos.second, std::sin(phi_k));
+        u_k.SetElement(max_element_pos.second, max_element_pos.first, -std::sin(phi_k));
         a_k = u_k * a_k;
         u_k.Transpose();
         a_k = a_k * u_k;
@@ -229,7 +227,7 @@ std::pair<TMatrix, TMatrix> JacobiRotationMethod(const TMatrix &a, double eps, s
         ++iter_count;
     }
     log_stream << "Jacobi's rotation method took " << iter_count << " iterations" << '\n';
-    return std::make_pair(a_k, u);
+    return {a_k, u};
 }
 
 double GetSumOfSquaredNonDiagonalElements(const TMatrix &a) {

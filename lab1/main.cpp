@@ -63,11 +63,11 @@ void Task1_4() {
     std::ofstream os("../task1_4_result.txt");
     is >> a >> eps;
     auto [aa, u] = JacobiRotationMethod(a, eps, os);
-    os << "Eigen values:" << '\n';
+    os << "Eigenvalues:" << '\n';
     for(size_t i = 0; i < a.GetSize().number_of_rows; ++i) {
         os << "a_" << i + 1 << " = " << aa.GetElement(i, i) << '\n';
     }
-    os << "Eigen vectors:" << '\n';
+    os << "Eigenvectors:" << '\n';
     for(size_t i = 0; i < a.GetSize().number_of_rows; ++i) {
         os << "x_" << i + 1 << " = " << "(";
         for(size_t j = 0; j < a.GetSize().number_of_rows; ++j) {
@@ -89,11 +89,22 @@ void Task1_4() {
     }
 }
 
+void Task1_5() {
+    TMatrix a;
+    double eps;
+    std::ifstream is("../task1_4.txt");
+    std::ofstream os("../task1_5_result.txt");
+    is >> a >> eps;
+    auto [q, r] = a.QRDecomposition();
+    std::cout << q * r << '\n';
+}
+
 int main() {
     Task1_1();
     Task1_2();
     Task1_3_1();
     Task1_3_2();
     Task1_4();
+    Task1_5();
     return 0;
 }

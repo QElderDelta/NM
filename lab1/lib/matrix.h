@@ -57,6 +57,8 @@ public:
 
     std::tuple<TMatrix, TMatrix, TMatrix> LUDecomposition() const;
 
+    std::pair<TMatrix, TMatrix> QRDecomposition() const;
+
     void SetElement(size_t i, size_t j, double value);
 
     void SetIdentity();
