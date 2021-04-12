@@ -241,3 +241,66 @@ double GetSumOfSquaredNonDiagonalElements(const TMatrix &a) {
     }
     return res;
 }
+
+std::vector<std::complex<double>> GetEigenvaluesUsingQR(const TMatrix& a, double eps,
+                                                                              std::ostream& log_stream) {
+    std::vector<std::array<std::complex<double>, 2>> eigens(a.GetSize().number_of_rows);
+    TMatrix a_k = a;
+    bool stop_iter;
+    size_t iter_count = 0;
+    while(true) {
+        stop_iter = true;
+        for(size_t i = 0; i < a_k.GetSize().number_of_rows; ++i) {
+            if(a_k.GetSquaredColumnSum(i, i + 1) < eps) {
+                stop_iter = stop_iter && std::abs(std::abs(eigens[i][0]) - a_k.GetElement(i, i)) < eps;
+                eigens[i][0] = a_k.GetElement(i, i);
+                eigens[i][1] = {};
+            } else if(a_k.GetSquaredColumnSum(i, i + 2) < eps) {
+                auto roots = SolveQudraticEquationForQR(a_k, i);
+                stop_iter = stop_iter && (std::abs(std::abs(eigens[i][0]) - std::abs(roots[0]))) < eps;
+                eigens[i][0] = roots[0];
+                eigens[i][1] = roots[1];
+                ++i;
+            } else {
+                stop_iter = false;
+            }
+        }
+        if(stop_iter) {
+            break;
+        }
+        auto [q, r] = a_k.QRDecomposition();
+        a_k = r * q;
+        ++iter_count;
+    }
+    log_stream << "QR Algorithm took " << iter_count << " iterations" << '\n';
+    std::vector<std::complex<double>> result;
+    for(size_t i = 0; i < eigens.size(); ++i) {
+        if(std::abs(eigens[i][1]) < eps) {
+            result.push_back(eigens[i][0]);
+        } else {
+            result.push_back(eigens[i][0]);
+            result.push_back(eigens[i][1]);
+            ++i;
+        }
+    }
+    return result;
+}
+
+std::vector<std::complex<double>> SolveQudraticEquationForQR(const TMatrix &a, size_t column) {
+    std::vector<std::complex<double>> v;
+    auto b = -a.GetElement(column, column) - a.GetElement(column + 1, column + 1);
+    auto c = a.GetElement(column, column) * a.GetElement(column + 1, column + 1)
+                - a.GetElement(column, column + 1) * a.GetElement(column + 1, column);
+    auto d = std::pow(b, 2.) - 4. * c;
+    if(d > 0) {
+        v.emplace_back(std::complex<double>{-b / 2. - std::sqrt(d) / 2., 0});
+        v.emplace_back(std::complex<double>{-b / 2. + std::sqrt(d) / 2., 0});
+    } else if(d == 0) {
+        v.emplace_back(std::complex<double>{-b / 2., 0});
+        v.emplace_back(std::complex<double>{-b / 2., 0});
+    } else {
+        v.emplace_back(std::complex<double>{-b / 2., -std::sqrt(-d) / 2.});
+        v.emplace_back(std::complex<double>{-b / 2., std::sqrt(-d) / 2.});
+    }
+    return v;
+}

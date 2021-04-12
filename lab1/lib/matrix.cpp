@@ -286,10 +286,11 @@ std::pair<TMatrix, TMatrix> TMatrix::QRDecomposition() const {
         v_transposed.Clear();
         sum = 0;
         v.matrix_[i][0] = this->matrix_[i][i];
-        for(size_t j = i + 1; j < size_.number_of_rows; ++j) {
+        for(size_t j = i; j < size_.number_of_rows; ++j) {
             sum += this->matrix_[j][i] * this->matrix_[j][i];
             v.matrix_[j][0] = this->matrix_[j][i];
         }
+        sum = std::sqrt(sum);
         if(this->matrix_[i][i] < 0) {
             sum *= -1;
         }
@@ -302,4 +303,12 @@ std::pair<TMatrix, TMatrix> TMatrix::QRDecomposition() const {
         r = h * r;
     }
     return {q, r};
+}
+
+double TMatrix::GetSquaredColumnSum(size_t column, size_t row) const {
+    double res = 0;
+    for(size_t j = row; j < size_.number_of_rows; ++j) {
+        res += matrix_[j][column] * matrix_[j][column];
+    }
+    return res;
 }

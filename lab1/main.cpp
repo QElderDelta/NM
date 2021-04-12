@@ -92,11 +92,14 @@ void Task1_4() {
 void Task1_5() {
     TMatrix a;
     double eps;
-    std::ifstream is("../task1_4.txt");
+    std::ifstream is("../task1_5.txt");
     std::ofstream os("../task1_5_result.txt");
     is >> a >> eps;
-    auto [q, r] = a.QRDecomposition();
-    std::cout << q * r << '\n';
+    auto v = GetEigenvaluesUsingQR(a, eps, os);
+    os << "Eigenvalues:" << '\n';
+    for(size_t i = 0; i < v.size(); ++i) {
+        os << "a_" << i + 1 << " = " << v[i] << '\n';
+    }
 }
 
 int main() {

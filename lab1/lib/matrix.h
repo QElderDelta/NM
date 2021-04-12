@@ -45,13 +45,15 @@ public:
 
     const double& GetElement(size_t i, size_t j) const;
 
-    const TMatrixSize& GetSize() const;
-
     double Getl1Norm() const;
 
     double Getl2Norm() const;
 
     double GetlinfNorm() const;
+
+    const TMatrixSize& GetSize() const;
+
+    double GetSquaredColumnSum(size_t column, size_t row = 0) const;
 
     TMatrix InverseMatrix() const;
 
