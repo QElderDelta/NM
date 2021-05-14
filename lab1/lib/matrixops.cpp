@@ -308,6 +308,5 @@ std::vector<std::complex<double>> SolveQudraticEquationForQR(const TMatrix &a, s
 
 TMatrix SolveLinearSystem(const TMatrix &a, const TMatrix &b) {
     auto [l, u, p] = a.LUDecomposition();
-    std::cout << p * l * u << '\n';
     return SolveLinearSystemUsingLU(l, u, p, b);
 }

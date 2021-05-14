@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "include/approximators.h"
+#include "include/derivative.h"
 #include "include/interpolators.h"
 
 void task3_1() {
@@ -84,9 +85,29 @@ void task3_3() {
     os << bCoeffs[0] << " + " << bCoeffs[1] << " * x + " << bCoeffs[2] << " * x^2" << '\n';
 }
 
+void task3_4() {
+    std::ifstream is("../task3_4.txt");
+    std::ofstream os("../task3_4_result.txt");
+    int n;
+    double point;
+    is >> n >> point;
+    std::vector<double> points(n);
+    std::vector<double> values(n);
+    for(int i = 0; i < n; ++i) {
+        is >> points[i];
+    }
+    for(int i = 0; i < n; ++i) {
+        is >> values[i];
+    }
+    DerivativeCalculator c(points, values);
+    os << "First derivative: " << c.getFirstDerivative(point) << '\n';
+    os << "Second derivative: " << c.getSecondDerivative(point) << '\n';
+}
+
 int main() {
     task3_1();
     task3_2();
     task3_3();
+    task3_4();
     return 0;
 }

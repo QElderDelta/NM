@@ -3,6 +3,7 @@
 double lagrangeInterpolation(const std::vector<double>& i_xValues,
                              const std::vector<double>& i_yValues,
                              double i_point) {
+    assert(i_xValues.size() == i_yValues.size());
     double result = 0;
     const double w = [&]() {
         double w = 1;
@@ -27,7 +28,10 @@ double lagrangeInterpolation(const std::vector<double>& i_xValues,
     return result;
 }
 
-double newtonInterpolation(const std::vector<double> &i_xValues, const std::vector<double> &i_yValues, double i_point) {
+double newtonInterpolation(const std::vector<double> &i_xValues,
+                           const std::vector<double> &i_yValues,
+                           double i_point) {
+    assert(i_xValues.size() == i_yValues.size());
     double result = 0;
     std::vector<std::vector<double>> differenceValues(i_xValues.size());
     for(double i_yValue : i_yValues) {
@@ -52,7 +56,9 @@ double newtonInterpolation(const std::vector<double> &i_xValues, const std::vect
     return result;
 }
 
-SplineInterpolator::SplineInterpolator(const std::vector<double> &i_xValues, const std::vector<double> &i_yValues) {
+SplineInterpolator::SplineInterpolator(const std::vector<double> &i_xValues,
+                                       const std::vector<double> &i_yValues) {
+    assert(i_xValues.size() == i_yValues.size());
     const int n = i_yValues.size() - 1;
     TTridiagonalMatrix a;
     TMatrix b(n - 1, 1);

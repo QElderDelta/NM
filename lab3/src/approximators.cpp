@@ -3,6 +3,7 @@
 LeastSquaresApproximator::LeastSquaresApproximator(const std::vector<double> &i_xValues,
                                                    const std::vector<double> &i_yValues, int order,
                                                    std::ostream &o_logStream) {
+    assert(i_xValues.size() == i_yValues.size());
     assert(order > 0);
     auto getXSum = [&](int power) {
         double result = 0;
