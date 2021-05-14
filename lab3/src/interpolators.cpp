@@ -114,15 +114,26 @@ double SplineInterpolator::getValue(double i_point) const {
     return result;
 }
 
-void SplineInterpolator::getSplineInfo(std::ostream& os) const {
+void SplineInterpolator::getSplineInfo(std::ostream& o_os) const {
     int count = 1;
     for(auto it = d_splines.begin();; ++it) {
         if(next(it) == d_splines.end()) {
             break;
         }
-        os << "Spline #" << count << ", range: [" << it->first << ", " << std::next(it)->first << "], ";
-        os << "a: " << it->second[0] << ", b: " << it->second[1] << ", c: " << it->second[2] << ", d:" << it->second[3];
-        os << '\n';
+        o_os << "Spline #" << count << ", range: [" << it->first << ", " << std::next(it)->first << "], ";
+        o_os << "a: " << it->second[0] << ", b: " << it->second[1] << ", c: " << it->second[2] << ", d:" << it->second[3];
+        o_os << '\n';
         ++count;
+    }
+}
+
+void SplineInterpolator::getSplineInfoWithoutText(std::ostream &o_os) const {
+    for(auto it = d_splines.begin();; ++it) {
+        if(next(it) == d_splines.end()) {
+            break;
+        }
+        o_os << it->first << " " << std::next(it)->first << " ";
+        o_os << it->second[0] << " " << it->second[1] << " " << it->second[2] << " " << it->second[3];
+        o_os << '\n';
     }
 }

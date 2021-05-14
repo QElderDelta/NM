@@ -36,6 +36,7 @@ void task3_1() {
 void task3_2() {
     std::ifstream is("../task3_2.txt");
     std::ofstream os("../task3_2_result.txt");
+    std::ofstream plotData("../task3_2_plot.txt");
     int n;
     double point;
     is >> n >> point;
@@ -51,6 +52,7 @@ void task3_2() {
     os << "Result of interpolation: ";
     os << s.getValue(point) << '\n';
     s.getSplineInfo(os);
+    s.getSplineInfoWithoutText(plotData);
 }
 
 int main() {

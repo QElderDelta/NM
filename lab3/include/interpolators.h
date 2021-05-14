@@ -18,7 +18,8 @@ class SplineInterpolator {
 public:
     SplineInterpolator(const std::vector<double>& i_xValues, const std::vector<double>& i_yValues);
     double getValue(double i_point) const;
-    void getSplineInfo(std::ostream& os) const;
+    void getSplineInfo(std::ostream& o_os) const;
+    void getSplineInfoWithoutText(std::ostream& o_os) const;
 private:
     std::map<double, std::vector<double>> d_splines;
 };
