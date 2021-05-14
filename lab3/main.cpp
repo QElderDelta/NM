@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 
+#include "include/approximators.h"
 #include "include/interpolators.h"
 
 void task3_1() {
@@ -55,8 +56,37 @@ void task3_2() {
     s.getSplineInfoWithoutText(plotData);
 }
 
+void task3_3() {
+    std::ifstream is("../task3_3.txt");
+    std::ofstream os("../task3_3_result.txt");
+    std::ofstream plotData("../task3_3_plot.txt");
+    int n;
+    is >> n;
+    std::vector<double> points(n);
+    std::vector<double> values(n);
+    for(int i = 0; i < n; ++i) {
+        is >> points[i];
+    }
+    for(int i = 0; i < n; ++i) {
+        is >> values[i];
+    }
+    os << "Approximation using first order polynom" << '\n';
+    LeastSquaresApproximator firstOrder(points, values, 1, os);
+    os << "Resulting function: ";
+    auto aCoeffs = firstOrder.getCoefficients();
+    plotData << aCoeffs[0] << " " << aCoeffs[1] << '\n';
+    os << aCoeffs[0] << " + " << aCoeffs[1] << " * x" << '\n';
+    os << "Approximation using second order polynom" << '\n';
+    LeastSquaresApproximator secondOrder(points, values, 2, os);
+    os << "Resulting function: ";
+    auto bCoeffs = secondOrder.getCoefficients();
+    plotData << bCoeffs[0] << " " << bCoeffs[1] << " " << bCoeffs[2] << '\n';
+    os << bCoeffs[0] << " + " << bCoeffs[1] << " * x + " << bCoeffs[2] << " * x^2" << '\n';
+}
+
 int main() {
     task3_1();
     task3_2();
+    task3_3();
     return 0;
 }

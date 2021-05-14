@@ -31,7 +31,9 @@ TMatrix SeidelMethod(const TMatrix& m, const TMatrix& b, double eps, std::ostrea
 
 TMatrix SimpleIterationsMethod(const TMatrix& m, const TMatrix& b, double eps, std::ostream& log_stream = std::cout);
 
-TMatrix SolveLinearSystemUsingLU(const TMatrix& l, const TMatrix& u, const TMatrix& p, const TMatrix& b);
+TMatrix SolveLinearSystem(const TMatrix& a, const TMatrix& b);
+
+TMatrix SolveLinearSystemUsingLU(const TMatrix& l, const TMatrix& u, TMatrix p, const TMatrix& b);
 
 std::vector<std::complex<double>> SolveQudraticEquationForQR(const TMatrix& a, size_t column);
 

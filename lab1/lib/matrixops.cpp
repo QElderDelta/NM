@@ -65,10 +65,11 @@ TMatrix InverseMatrixUsingLU(const TMatrix &l, const TMatrix &u, const TMatrix &
     return e;
 }
 
-TMatrix SolveLinearSystemUsingLU(const TMatrix &l, const TMatrix &u, const TMatrix &p, const TMatrix &b) {
+TMatrix SolveLinearSystemUsingLU(const TMatrix &l, const TMatrix &u, TMatrix p, const TMatrix &b) {
     TMatrix z(l.GetSize().number_of_rows, 1);
     TMatrix x(l.GetSize().number_of_rows, 1);
     TMatrix b_permutation;
+    p.Transpose();
     b_permutation = p * b;
     z = ForwardSubstitution(l, b_permutation, 0);
     x = BackwardSubstitution(u, z, 0);
@@ -303,4 +304,10 @@ std::vector<std::complex<double>> SolveQudraticEquationForQR(const TMatrix &a, s
         v.emplace_back(std::complex<double>{-b / 2., std::sqrt(-d) / 2.});
     }
     return v;
+}
+
+TMatrix SolveLinearSystem(const TMatrix &a, const TMatrix &b) {
+    auto [l, u, p] = a.LUDecomposition();
+    std::cout << p * l * u << '\n';
+    return SolveLinearSystemUsingLU(l, u, p, b);
 }
