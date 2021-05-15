@@ -5,6 +5,7 @@
 
 #include "include/approximators.h"
 #include "include/derivative.h"
+#include "include/integral.h"
 #include "include/interpolators.h"
 
 void task3_1() {
@@ -104,10 +105,56 @@ void task3_4() {
     os << "Second derivative: " << c.getSecondDerivative(point) << '\n';
 }
 
+void task3_5() {
+    std::ifstream is("../task3_5.txt");
+    std::ofstream os("../task3_5_result.txt");
+    double start, end, h1, h2;
+    is >> start >> end >> h1 >> h2;
+    auto f = [](double x) {
+        return 1 / ((2 * x + 7) * (3 * x + 4));
+    };
+    const double exactValue = 0.104471;
+    os << "Exact value is " << exactValue << '\n';
+    os << "Result of integration using rectangle method with step " << h1 << ": ";
+    os << integrateUsingRectangleMethod(f, start, end, h1) << '\n';
+    os << "Result of integration using rectangle method with step " << h2 << ": ";
+    os << integrateUsingRectangleMethod(f, start, end, h2) << '\n';
+    os << "Result of integration using trapezoid method with step " << h1 << ": ";
+    os << integrateUsingTrapezoidMethod(f, start, end, h1) << '\n';
+    os << "Result of integration using trapezoid method with step " << h2 << ": ";
+    os << integrateUsingTrapezoidMethod(f, start, end, h2) << '\n';
+    os << "Result of integration using Simpson's method with step " << h1 << ": ";
+    os << integrateUsingSimpsonMethod(f, start, end, h1) << '\n';
+    os << "Result of integration using Simpson's method with step " << h2 << ": ";
+    os << integrateUsingSimpsonMethod(f, start, end, h2) << '\n';
+    os << "Result for rectangle method after using Runge-Romberg method: ";
+    auto res1 = rungeRombergMethod(integrateUsingRectangleMethod(f, start, end, h1),
+                                  integrateUsingRectangleMethod(f, start, end, h2),
+                                  h1 / h2,
+                                  2);
+    os << res1 << '\n';
+    os << "Absolute error for rectangle method is " << std::abs(exactValue - res1) << '\n';
+    auto res2 = rungeRombergMethod(integrateUsingTrapezoidMethod(f, start, end, h1),
+                                   integrateUsingTrapezoidMethod(f, start, end, h2),
+                                   h1 / h2,
+                                   2);
+    os << "Result for trapezoid method after using Runge-Romberg method: ";
+    os << res2 << '\n';
+    os << "Absolute error for trapezoid method is " << std::abs(exactValue - res2) << '\n';
+    auto res3 = rungeRombergMethod(integrateUsingSimpsonMethod(f, start, end, h1),
+                                   integrateUsingSimpsonMethod(f, start, end, h2),
+                                   h1 / h2,
+                                   4);
+    os << "Result for Simpson's method after using Runge-Romberg method: ";
+    os << res3 << '\n';
+    os << "Absolute error for rectangle method is " << std::abs(exactValue - res3) << '\n';
+}
+
 int main() {
     task3_1();
     task3_2();
     task3_3();
     task3_4();
+    task3_5();
     return 0;
 }
