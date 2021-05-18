@@ -12,12 +12,16 @@ double newtonsMethod(ISingleArgumentFunction& i_function, double i_x0, double i_
     return xk;
 }
 
-double simpleIterationsMethod(ISingleArgumentFunction& i_function, double i_x0, double i_q, double i_eps,
+double simpleIterationsMethod(ISingleArgumentFunction& i_function, double i_x0, double i_a, double i_b, double i_eps,
                               std::ostream& log_stream) {
-    assert(i_q < 1);
+    const double q = [&i_function, i_a, i_b]() {
+       return std::abs(i_function.firstDerivative(i_a)) >= std::abs(i_function.firstDerivative(i_b))
+       ? std::abs(i_function.firstDerivative(i_a)) : std::abs(i_function.firstDerivative(i_b));
+    }();
+    assert(q < 1);
     int numberOfIterations = 1;
     double xk = i_function.getValue(i_x0);
-    while(i_q * std::abs(xk - i_x0) / (1 - i_q) > i_eps) {
+    while(q * std::abs(xk - i_x0) / (1 - q) > i_eps) {
         ++numberOfIterations;
         i_x0 = xk;
         xk = i_function.getValue(i_x0);
@@ -67,8 +71,7 @@ newtonsMethod(ITwoArgumentFunction &i_f1, ITwoArgumentFunction &i_f2, std::pair<
 
 std::pair<double, double>
 simpleIterationsMethod(ITwoArgumentFunction &i_f1, ITwoArgumentFunction &i_f2, std::pair<double, double> i_x0,
-                       double i_q, double i_eps, std::ostream &log_stream) {
-    assert(i_q < 1);
+                       double i_eps, std::ostream &log_stream) {
     int numberOfIterations = 1;
     TMatrix x0(2, 1);
     x0.SetElement(0, 0, i_x0.first);
@@ -76,7 +79,7 @@ simpleIterationsMethod(ITwoArgumentFunction &i_f1, ITwoArgumentFunction &i_f2, s
     TMatrix xk(2, 1);
     xk.SetElement(0, 0, i_f1.getValue(x0.GetElement(0, 0), x0.GetElement(1, 0)));
     xk.SetElement(1, 0, i_f2.getValue(x0.GetElement(0, 0), x0.GetElement(1, 0)));
-    while(i_q * (xk - x0).Getl1Norm() / (1 - i_q) > i_eps) {
+    while((xk - x0).Getl1Norm() > i_eps) {
         ++numberOfIterations;
         x0 = xk;
         xk.SetElement(0, 0, i_f1.getValue(x0.GetElement(0, 0), x0.GetElement(1, 0)));

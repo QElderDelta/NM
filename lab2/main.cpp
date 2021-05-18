@@ -17,7 +17,7 @@ void task2_1() {
     is >> x0;
     is >> q;
     os << "Root found by simple iterations method:" << '\n';
-    os << simpleIterationsMethod(tf, x0, q, eps, os) << '\n';
+    os << simpleIterationsMethod(tf, x0, 0.5, 2, eps, os) << '\n';
 }
 
 void task2_2() {
@@ -35,7 +35,7 @@ void task2_2() {
     os << "Solution found by simple iterations method: " << '\n';
     SecondTaskFunction1Transformed f3;
     SecondTaskFunction2Transformed f4;
-    auto [x3, x4] = simpleIterationsMethod(f3, f4, {x0_1, x0_2}, q, eps, os);
+    auto [x3, x4] = simpleIterationsMethod(f3, f4, {x0_1, x0_2}, eps, os);
     os << "x1: " << x3 << " x2: " << x4 << '\n';
 }
 
