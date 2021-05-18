@@ -61,5 +61,5 @@ double integrateUsingSimpsonMethod(const std::function<double(double)> &i_f,
 
 double rungeRombergMethod(double i_fh, double i_fkh, double k, double p) {
     assert(k != 1 && k > 0);
-    return i_fh + (i_fh - i_fkh) / (pow(k, p) - 1);
+    return (i_fh - i_fkh) / (pow(k, p) - 1);
 }
