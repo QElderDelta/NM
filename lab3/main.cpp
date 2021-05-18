@@ -127,27 +127,24 @@ void task3_5() {
     os << integrateUsingSimpsonMethod(f, start, end, h1) << '\n';
     os << "Result of integration using Simpson's method with step " << h2 << ": ";
     os << integrateUsingSimpsonMethod(f, start, end, h2) << '\n';
-    os << "Result for rectangle method after using Runge-Romberg method: ";
+    os << "Error for rectangle method counted using Runge-Romberg method: ";
     auto res1 = rungeRombergMethod(integrateUsingRectangleMethod(f, start, end, h1),
                                   integrateUsingRectangleMethod(f, start, end, h2),
                                   h1 / h2,
                                   2);
     os << res1 << '\n';
-    os << "Absolute error for rectangle method is " << std::abs(exactValue - res1) << '\n';
     auto res2 = rungeRombergMethod(integrateUsingTrapezoidMethod(f, start, end, h1),
                                    integrateUsingTrapezoidMethod(f, start, end, h2),
                                    h1 / h2,
                                    2);
-    os << "Result for trapezoid method after using Runge-Romberg method: ";
+    os << "Error for trapezoid method counted using Runge-Romberg method: ";
     os << res2 << '\n';
-    os << "Absolute error for trapezoid method is " << std::abs(exactValue - res2) << '\n';
     auto res3 = rungeRombergMethod(integrateUsingSimpsonMethod(f, start, end, h1),
                                    integrateUsingSimpsonMethod(f, start, end, h2),
                                    h1 / h2,
                                    4);
-    os << "Result for Simpson's method after using Runge-Romberg method: ";
+    os << "Error for Simpson's method counted using Runge-Romberg method: ";
     os << res3 << '\n';
-    os << "Absolute error for rectangle method is " << std::abs(exactValue - res3) << '\n';
 }
 
 int main() {

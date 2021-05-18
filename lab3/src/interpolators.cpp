@@ -68,7 +68,7 @@ SplineInterpolator::SplineInterpolator(const std::vector<double> &i_xValues,
     };
     os << n - 1 << '\n';
     os << 2 * (getH(1) + getH(2)) << ' ' << getH(2) << '\n';
-    b.SetElement(0, 0, 3 * ((i_yValues[2] - i_yValues[1]) / getH(2) - (i_yValues[1] - i_yValues[0])) / getH(1));
+    b.SetElement(0, 0, 3 * ((i_yValues[2] - i_yValues[1]) / getH(2) - (i_yValues[1] - i_yValues[0]) / getH(1)));
     for(int i = 3; i <= n - 1; ++i) {
         os << getH(i - 1) << ' ' << 2 * (getH(i - 1) + getH(i)) << ' ' << getH(i) << '\n';
         b.SetElement(i - 2, 0, 3 * ((i_yValues[i] - i_yValues[i - 1]) / getH(i)
@@ -76,7 +76,7 @@ SplineInterpolator::SplineInterpolator(const std::vector<double> &i_xValues,
     }
     os << getH(n - 1) << ' ' << 2 * (getH(n - 1) + getH(n)) << '\n';
     b.SetElement(n - 2, 0, 3 * ((i_yValues[n] - i_yValues[n - 1]) / getH(n)
-                                             - (i_yValues[n - 1] - i_yValues[n - 2])) / getH(n - 1));
+                                             - (i_yValues[n - 1] - i_yValues[n - 2]) / getH(n - 1)));
     os >> a;
     TMatrix c = SweepMethod(a, b);
     std::vector<double> cValues;
