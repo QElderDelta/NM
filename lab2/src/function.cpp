@@ -24,6 +24,10 @@ double SecondTaskFunction1::getFirstDerivativeBySecondArgument(double i_x1, doub
     return sin(i_x2);
 }
 
+double SecondTaskFunction1::getValue(std::pair<double, double> i_point) {
+    return this->getValue(i_point.first, i_point.second);
+}
+
 double SecondTaskFunction2::getValue(double i_x1, double i_x2) {
     return i_x2 - log10(i_x1 + 1) - 2;
 }
@@ -34,6 +38,10 @@ double SecondTaskFunction2::getFirstDerivativeByFirstArgument(double i_x1, doubl
 
 double SecondTaskFunction2::getFirstDerivativeBySecondArgument(double i_x1, double i_x2) {
     return 1;
+}
+
+double SecondTaskFunction2::getValue(std::pair<double, double> i_point) {
+    return this->getValue(i_point.first, i_point.second);
 }
 
 double SecondTaskFunction1Transformed::getValue(double i_x1, double i_x2) {

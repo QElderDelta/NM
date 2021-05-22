@@ -22,6 +22,7 @@ class TransformedFunction : public TaskFunction {
 class ITwoArgumentFunction {
 public:
     virtual double getValue(double i_x1, double i_x2) = 0;
+    virtual double getValue(std::pair<double, double> i_point) = 0;
     virtual double getFirstDerivativeByFirstArgument(double i_x1, double i_x2) = 0;
     virtual double getFirstDerivativeBySecondArgument(double i_x1, double i_x2) = 0;
     ~ITwoArgumentFunction() = default;
@@ -30,6 +31,7 @@ public:
 class SecondTaskFunction1 : public ITwoArgumentFunction {
 public:
     double getValue(double i_x1, double i_x2) override;
+    double getValue(std::pair<double, double> i_point) override;
     double getFirstDerivativeByFirstArgument(double i_x1, double i_x2) override;
     double getFirstDerivativeBySecondArgument(double i_x1, double i_x2) override;
 };
@@ -37,6 +39,7 @@ public:
 class SecondTaskFunction2 : public ITwoArgumentFunction {
 public:
     double getValue(double i_x1, double i_x2) override;
+    double getValue(std::pair<double, double> i_point) override;
     double getFirstDerivativeByFirstArgument(double i_x1, double i_x2) override;
     double getFirstDerivativeBySecondArgument(double i_x1, double i_x2) override;
 };
