@@ -15,7 +15,7 @@ def analytic_solution_fixed_time(t, h, count=None):
 
 
 def analytic_solution_fixed_x(x, tau, count=None):
-    res = np.array([analytic_solution(x, t) for t in np.arange(0, 1, tau)])
+    res = np.array([analytic_solution(x, t) for t in np.arange(0, 10, tau)])
     if count and count != len(res):
         return res[-1:]
     return res
@@ -66,32 +66,32 @@ plt.legend()
 fig = plt.figure()
 fig.suptitle('Solution at x = 0.6')
 
-t = np.arange(0, 1, 0.02)
+t = np.arange(0, 10, 0.02)
 plt.plot(t, get_fixed_x_solution(impl_solution, -5), label='Implicit method')
 plt.plot(t, get_fixed_x_solution(expl_solution, -5), label='Explicit method')
 plt.plot(t, get_fixed_x_solution(exim_solution, -5), label='Crank-Nicolson method')
 plt.plot(t, analytic_solution_fixed_x(0.6, 0.02), label='Analytic solution')
 plt.legend()
-#
+
 fig = plt.figure()
 
 fig.suptitle('Error - time dependency, x = 0.6')
 
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), impl_solution[t]) for t in
-             np.arange(0, 1, 0.02)],
+             np.arange(0, 10, 0.02)],
          label='Implicit method error')
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), expl_solution[t]) for t in
-             np.arange(0, 1, 0.02)],
+             np.arange(0, 10, 0.02)],
          label='Explicit method error')
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), exim_solution[t]) for t in
-             np.arange(0, 1, 0.02)],
+             np.arange(0, 10, 0.02)],
          label='Crank-Nicolson method error')
 
 plt.legend()
 
 fig = plt.figure()
 
-fig.suptitle('Error - tau dependency, h = 0.64, x = 0.64')
+fig.suptitle('Error - tau dependency, h = 0.64, t ≈ 5')
 
 tau = np.arange(0.01, 0.21, 0.01)
 
@@ -105,12 +105,20 @@ for i in tau:
     expl_solution = read_file('expl.txt', i)
     exim_solution = read_file('exim.txt', i)
 
+    t = 5
+    current_t = 0
+    current_diff = np.inf
+    for k in impl_solution.keys():
+        if abs(k - t) < current_diff:
+            current_diff = abs(k - t)
+            current_t = k
+
     tau_errors_expl.append(
-        error(analytic_solution_fixed_x(0.64, i, len(expl_solution)), get_fixed_x_solution(expl_solution, 1)))
+        error(analytic_solution_fixed_time(current_t, 0.64, len(expl_solution[current_t])), expl_solution[current_t]))
     tau_errors_impl.append(
-        error(analytic_solution_fixed_x(0.64, i, len(expl_solution)), get_fixed_x_solution(impl_solution, 1)))
+        error(analytic_solution_fixed_x(current_t, 0.64, len(expl_solution[current_t])), impl_solution[current_t]))
     tau_errors_exim.append(
-        error(analytic_solution_fixed_x(0.64, i, len(expl_solution)), get_fixed_x_solution(exim_solution, 1)))
+        error(analytic_solution_fixed_x(current_t, 0.64, len(expl_solution[current_t])), exim_solution[current_t]))
 
 plt.plot(tau, tau_errors_impl, label='Implicit method')
 plt.plot(tau, tau_errors_expl, label='Explicit method')
@@ -119,7 +127,7 @@ plt.legend()
 
 fig = plt.figure()
 
-fig.suptitle('Error - h dependency, tau = 0.02, t = 0.5')
+fig.suptitle('Error - h dependency, tau = 0.02, t = 5')
 
 h_values = np.arange(0.2, 0.64, 0.02)
 
@@ -128,14 +136,14 @@ h_errors_impl = []
 h_errors_exim = []
 
 for i in h_values:
-    run_prog(i, 0.02)
-    impl_solution = read_file('impl.txt', 0.02)
-    expl_solution = read_file('expl.txt', 0.02)
-    exim_solution = read_file('exim.txt', 0.02)
+    run_prog(i, 1)
+    impl_solution = read_file('impl.txt', 1)
+    expl_solution = read_file('expl.txt', 1)
+    exim_solution = read_file('exim.txt', 1)
 
-    h_errors_expl.append(error(analytic_solution_fixed_time(0.5, len(expl_solution[0.5])), expl_solution[0.5]))
-    h_errors_impl.append(error(analytic_solution_fixed_time(0.5, len(expl_solution[0.5])), impl_solution[0.5]))
-    h_errors_exim.append(error(analytic_solution_fixed_time(0.5, len(expl_solution[0.5])), exim_solution[0.5]))
+    h_errors_expl.append(error(analytic_solution_fixed_time(5, len(expl_solution[5])), expl_solution[5]))
+    h_errors_impl.append(error(analytic_solution_fixed_time(5, len(expl_solution[5])), impl_solution[5]))
+    h_errors_exim.append(error(analytic_solution_fixed_time(5, len(expl_solution[5])), exim_solution[5]))
 
 plt.plot(h_values, h_errors_impl, label='Implicit method')
 plt.plot(h_values, h_errors_expl, label='Explicit method')
