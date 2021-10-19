@@ -112,7 +112,7 @@ std::vector<double> CrankNicolsonSolutionSingleStep(const TMatrix& res, const Ta
         return res.GetElement(k - 1, j - 1) - 2 * res.GetElement(k - 1, j) + res.GetElement(k - 1, j + 1);
     };
     os << n << '\n';
-    os << data.beta - data.alpha * data.h << ' ' << data.alpha / data.h << '\n';
+    os << data.beta - data.alpha / data.h << ' ' << data.alpha / data.h << '\n';
     b.SetElement(0, 0, data.left_constraint(t_k));
     for (int j = 1; j < n - 1; ++j) {
         auto current_x = GetIthPoint(data.x_left, data.h, j);
