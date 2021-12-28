@@ -56,7 +56,7 @@ int main() {
     seid << seid_solution << '\n';
     std::ofstream relax("relax.txt");
     std::ofstream relax_eps("relax_eps.txt");
-    auto relax_solution = relaxationMethod(data, 0.5, &relax_eps);
+    auto relax_solution = relaxationMethod(data, 0.9, &relax_eps);
     relax << relax_solution << '\n';
     return 0;
 }

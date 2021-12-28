@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def analytic_solution(x, y, t):
@@ -75,7 +76,7 @@ def read_eps_file(file):
 
 hx = 0.1
 hy = 0.1
-tau = 0.1
+tau = 0.01
 t_max = 5
 
 run_prog(hx, hy, tau, t_max)
@@ -153,5 +154,30 @@ plt.plot([k for k in step_solution.keys()],
          [error(analytic_solution_fixed_t(hx, hy, t), step_solution[t]) for t in step_solution.keys()],
          label='Fractional steps method error')
 plt.legend()
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+y = np.arange(0, 1 + hy, hy)
+x = np.arange(0, 1 + hx, hx)
+
+X, Y = np.meshgrid(x, y)
+
+ax.plot_surface(X, Y, np.array(var_solution[0]), label='Variable steps method')
+ax.plot_surface(X, Y, np.array(step_solution[0]), label='Fractional steps method error')
+
+z = analytic_solution(X, Y, 0)
+
+surf = ax.plot_surface(X, Y, z, label='Analytic solution')
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+
+ax.plot_surface(X, Y, np.array(var_solution[get_closest_to(var_solution, 0.75)]), label='Variable steps method')
+ax.plot_surface(X, Y, np.array(step_solution[get_closest_to(step_solution, 0.75)]), label='Fractional steps method error')
+
+z = analytic_solution(X, Y, 0.75)
+
+ax.plot_surface(X, Y, z)
 
 plt.show()

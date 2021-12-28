@@ -69,8 +69,8 @@ def read_eps_file(file):
     return np.array(res)
 
 
-hx = 0.01
-hy = 0.01
+hx = 0.1
+hy = 0.1
 eps = 0.000001
 
 run_prog(hx, hy, eps)
@@ -118,9 +118,30 @@ relax_eps = read_eps_file('relax_eps.txt')
 plt.plot(lieb_eps, label='Liebmann method')
 plt.plot(seid_eps, label='Seidel method')
 plt.plot(relax_eps, label='Relaxation method, tau = 0.5')
-
+plt.legend()
 plt.yscale('log')
 
-plt.legend()
+fig = plt.figure()
+
+ax = fig.gca(projection='3d')
+
+x = np.arange(0, np.pi / 2, hx)
+y = np.arange(0, np.pi / 2, hy)
+
+X, Y = np.meshgrid(x, y)
+
+arr_lieb = []
+for v in lieb_solution.values():
+    arr_lieb.append(v)
+
+print(X.shape)
+print(Y.shape)
+print(np.array(arr_lieb).shape)
+
+ax.plot_surface(X, Y, np.array(arr_lieb), label='Variable steps method')
+
+z = analytic_solution(X, Y)
+
+ax.plot_surface(X, Y, z)
 
 plt.show()

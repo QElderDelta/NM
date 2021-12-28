@@ -64,6 +64,30 @@ plt.plot(x, analytic_solution_fixed_time(0.5, 0.2), label='Analytic solution')
 plt.legend()
 
 fig = plt.figure()
+fig.suptitle('Solution at t = 2')
+plt.plot(x, impl_solution[2], label='Implicit method')
+plt.plot(x, expl_solution[2], label='Explicit method')
+plt.plot(x, exim_solution[2], label='Crank-Nicolson method')
+plt.plot(x, analytic_solution_fixed_time(2, 0.2), label='Analytic solution')
+plt.legend()
+
+fig = plt.figure()
+fig.suptitle('Solution at t = 4')
+plt.plot(x, impl_solution[4], label='Implicit method')
+plt.plot(x, expl_solution[4], label='Explicit method')
+plt.plot(x, exim_solution[4], label='Crank-Nicolson method')
+plt.plot(x, analytic_solution_fixed_time(4, 0.2), label='Analytic solution')
+plt.legend()
+
+fig = plt.figure()
+fig.suptitle('Solution at t = 8')
+plt.plot(x, impl_solution[8], label='Implicit method')
+plt.plot(x, expl_solution[8], label='Explicit method')
+plt.plot(x, exim_solution[8], label='Crank-Nicolson method')
+plt.plot(x, analytic_solution_fixed_time(8, 0.2), label='Analytic solution')
+plt.legend()
+
+fig = plt.figure()
 fig.suptitle('Solution at x = 0.6')
 
 t = np.arange(0, 10, 0.02)
@@ -75,7 +99,7 @@ plt.legend()
 
 fig = plt.figure()
 
-fig.suptitle('Error - time dependency, x = 0.6')
+fig.suptitle('Error - time dependency')
 
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), impl_solution[t]) for t in
              np.arange(0, 10, 0.02)],
@@ -91,7 +115,7 @@ plt.legend()
 
 fig = plt.figure()
 
-fig.suptitle('Error - tau dependency, h = 0.64, t ≈ 5')
+fig.suptitle('Error - tau dependency, h = 0.4, t ≈ 5')
 
 tau = np.arange(0.01, 0.21, 0.01)
 
@@ -100,7 +124,7 @@ tau_errors_impl = []
 tau_errors_exim = []
 
 for i in tau:
-    run_prog(0.64, i)
+    run_prog(0.4, i)
     impl_solution = read_file('impl.txt', i)
     expl_solution = read_file('expl.txt', i)
     exim_solution = read_file('exim.txt', i)
@@ -114,11 +138,11 @@ for i in tau:
             current_t = k
 
     tau_errors_expl.append(
-        error(analytic_solution_fixed_time(current_t, 0.64, len(expl_solution[current_t])), expl_solution[current_t]))
+        error(analytic_solution_fixed_x(current_t, 0.4, len(expl_solution[current_t])), expl_solution[current_t]))
     tau_errors_impl.append(
-        error(analytic_solution_fixed_x(current_t, 0.64, len(expl_solution[current_t])), impl_solution[current_t]))
+        error(analytic_solution_fixed_x(current_t, 0.4, len(expl_solution[current_t])), impl_solution[current_t]))
     tau_errors_exim.append(
-        error(analytic_solution_fixed_x(current_t, 0.64, len(expl_solution[current_t])), exim_solution[current_t]))
+        error(analytic_solution_fixed_x(current_t, 0.4, len(expl_solution[current_t])), exim_solution[current_t]))
 
 plt.plot(tau, tau_errors_impl, label='Implicit method')
 plt.plot(tau, tau_errors_expl, label='Explicit method')
@@ -127,19 +151,19 @@ plt.legend()
 
 fig = plt.figure()
 
-fig.suptitle('Error - h dependency, tau = 0.02, t = 5')
+fig.suptitle('Error - h dependency, tau = 0.5, t = 5')
 
-h_values = np.arange(0.2, 0.64, 0.02)
+h_values = np.arange(0.4, 0.65, 0.01)
 
 h_errors_expl = []
 h_errors_impl = []
 h_errors_exim = []
 
 for i in h_values:
-    run_prog(i, 1)
-    impl_solution = read_file('impl.txt', 1)
-    expl_solution = read_file('expl.txt', 1)
-    exim_solution = read_file('exim.txt', 1)
+    run_prog(i, 0.5)
+    impl_solution = read_file('impl.txt', 0.5)
+    expl_solution = read_file('expl.txt', 0.5)
+    exim_solution = read_file('exim.txt', 0.5)
 
     h_errors_expl.append(error(analytic_solution_fixed_time(5, len(expl_solution[5])), expl_solution[5]))
     h_errors_impl.append(error(analytic_solution_fixed_time(5, len(expl_solution[5])), impl_solution[5]))

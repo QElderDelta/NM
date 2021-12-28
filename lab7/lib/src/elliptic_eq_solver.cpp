@@ -7,7 +7,7 @@ namespace {
 
     TMatrix fillGrid(const TaskData& data) {
         double x_range = data.x_right - data.x_left;
-        int number_of_rows = (data.y_top - data.y_bottom) / data.hy;
+        int number_of_rows = (data.y_top - data.y_bottom) / data.hy + 1;
         int number_of_columns = x_range / data.hx + 1;
         TMatrix result(number_of_rows, number_of_columns);
         double curr_point, u_left, u_right;

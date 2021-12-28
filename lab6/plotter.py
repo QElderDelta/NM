@@ -22,7 +22,10 @@ def analytic_solution_fixed_x(x, tau, count=None):
 
 
 def error(analytic, numeric):
-    return np.sum((analytic - numeric) ** 2) ** 0.5
+    return np.sum((analytic - numeric) ** 2) ** 0.5 / len(analytic)
+
+def error_x(analytic, numeric):
+    return (analytic - numeric) ** 2 / len(numeric)
 
 
 def get_fixed_x_solution(solution, idx):
@@ -58,10 +61,63 @@ expl_solution = read_file('expl.txt', tau)
 
 x = np.arange(0, np.pi / 2, h)
 
+t = 1
+
+fig = plt.figure()
+fig.suptitle('Solution at t = {}'.format(t))
+plt.plot(x, impl_solution[t], label='Implicit method')
+plt.plot(x, expl_solution[t], label='Explicit method')
+plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
+plt.legend()
+
 t = 5
 
 fig = plt.figure()
-fig.suptitle('Solution at t = 5')
+fig.suptitle('Solution at t = {}'.format(t))
+plt.plot(x, impl_solution[t], label='Implicit method')
+plt.plot(x, expl_solution[t], label='Explicit method')
+plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
+plt.legend()
+
+t = 7
+
+fig = plt.figure()
+fig.suptitle('Solution at t = {}'.format(t))
+plt.plot(x, impl_solution[t], label='Implicit method')
+plt.plot(x, expl_solution[t], label='Explicit method')
+plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
+plt.legend()
+
+tau = 0.01
+
+run_prog(h, tau, 10)
+impl_solution = read_file('impl.txt', tau)
+expl_solution = read_file('expl.txt', tau)
+
+x = np.arange(0, np.pi / 2, h)
+
+t = 1
+
+fig = plt.figure()
+fig.suptitle('Solution at t = {}'.format(t))
+plt.plot(x, impl_solution[t], label='Implicit method')
+plt.plot(x, expl_solution[t], label='Explicit method')
+plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
+plt.legend()
+
+t = 5
+
+fig = plt.figure()
+fig.suptitle('Solution at t = {}'.format(t))
+plt.plot(x, impl_solution[t], label='Implicit method')
+plt.plot(x, expl_solution[t], label='Explicit method')
+plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
+plt.legend()
+
+t = 7
+
+fig = plt.figure()
+fig.suptitle('Solution at t = {}'.format(t))
 plt.plot(x, impl_solution[t], label='Implicit method')
 plt.plot(x, expl_solution[t], label='Explicit method')
 plt.plot(x, analytic_solution_fixed_time(t, h), label='Analytic solution')
@@ -70,10 +126,10 @@ plt.legend()
 fig = plt.figure()
 fig.suptitle('Solution at x = 0.6')
 
-t = np.arange(0, 10, 0.2)
+t = np.arange(0, 10, tau)
 plt.plot(t, get_fixed_x_solution(impl_solution, 2), label='Implicit method')
 plt.plot(t, get_fixed_x_solution(expl_solution, 2), label='Explicit method')
-plt.plot(t, analytic_solution_fixed_x(0.6, 0.2), label='Analytic solution')
+plt.plot(t, analytic_solution_fixed_x(0.6, tau), label='Analytic solution')
 plt.legend()
 
 fig = plt.figure()
@@ -81,13 +137,22 @@ fig = plt.figure()
 fig.suptitle('Error - time dependency, x = 0.6')
 
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), impl_solution[t]) for t in
-             np.arange(0, 10, 0.2)],
+             np.arange(0, 10, tau)],
          label='Implicit method error')
 plt.plot(t, [error(analytic_solution_fixed_time(t, len(impl_solution[t])), expl_solution[t]) for t in
-             np.arange(0, 10, 0.2)],
+             np.arange(0, 10, tau)],
          label='Explicit method error')
 
 plt.legend()
+
+# fig = plt.figure()
+#
+# fig.suptitle('Error, t = 5')
+#
+# t = 5
+#
+# plt.plot(x, error_x(analytic_solution_fixed_time(t, h), impl_solution[t]), label='impl')
+
 
 # fig = plt.figure()
 #
