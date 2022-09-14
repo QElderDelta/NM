@@ -111,6 +111,24 @@ plt.plot(x, analytic_solution_fixed_y(y, hx), label='Analytic solution')
 plt.legend()
 
 fig = plt.figure()
+
+fig.suptitle('Error - time dependency')
+
+y = np.arange(0, np.pi / 2, hy)
+
+plt.plot(y, [error(analytic_solution_fixed_y(t, hx), lieb_solution[t]) for t in
+             y],
+         label='Liebmann method')
+plt.plot(y, [error(analytic_solution_fixed_y(t, hx), seid_solution[t]) for t in
+             y],
+         label='Seidel method')
+plt.plot(y, [error(analytic_solution_fixed_y(t, hx), relax_solution[t]) for t in
+             y],
+         label='Relaxation method, tau = 0.5')
+
+plt.legend()
+
+fig = plt.figure()
 fig.suptitle(f'Eps - iteration number dependency, target eps = {eps}')
 lieb_eps = read_eps_file('lieb_eps.txt')
 seid_eps = read_eps_file('seid_eps.txt')
